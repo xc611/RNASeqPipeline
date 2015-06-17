@@ -1,8 +1,8 @@
 ##  Instructions
-## Step0: get the pipeline
+# Step 0: get the pipeline
    git clone https://github.com/CCBR/RNASeqPipeline
 
-## Step1: login mode
+# Step 1: login mode
 1/ add a BASH_ENV to  your .bashrc file
 
   1-1 Create a file called ~/.bash_script_exports.
@@ -16,18 +16,18 @@
 - login with option -X
   example: ssh -X user@biowulf.nih.gov 
 
-## Step2: data, config and scripts 
+# Step 2: data, config and scripts 
 
-3/ cp *.sh <path2yourdirectory>
-   cp *.json <path2yourdirectory>
+3/ cp *.sh path2workingdirectory
+   cp *.json path2workingdirectory
   
-  # edit the config file & rename it config.json
+  ## edit the config file & rename it config.json
 
 
-## Step3: run pipeline from your working directory
+# Step3: run pipeline from your working directory
 
-# test and check your configuration (fake run)
+## test and check your configuration (fake run)
 4/ bash dryrun.sh
 
-# main call (real run)
+## main call (real run)
 5/ qsub -V -l nodes=1:gpfs submit.sh
