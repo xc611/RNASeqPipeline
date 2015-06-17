@@ -1,0 +1,150 @@
+#! /usr/bin/perl -w
+use strict;
+use Getopt::Long;
+use Excel::Writer::XLSX;
+
+#################################################################################################################################################################################
+#Program Name: summarizeFastQCver2.
+#Author: Anjan Purkayastha
+#Updated : FE
+#Function:This program takes as its input a directory name (specified by the dir command-line parameter). It searches for all the "fastqc_data.txt" files in this directory.
+#fastqc_data.txt is the text output of the program FastQC. The program then parses each file, stores the parameters and their values in a hash of arrays
+#The contents of the hash are then formatted and printed in an excel sheet. The user specifies the name of the excel sheet in the outfile command-line parameter.
+#
+#Usage: summarizeFastQCver2 --dir <path to parent of all FastQC folders> --outfile <name of Excel output file>.
+#################################################################################################################################################################################
+my ($dir,$out);
+my %fqc; # a hash of arrays to store the parsed data from each fastqc_data.txt file. Key= Sample ID;
+
+GetOptions('dir:s'=> \$dir, 'outfile:s'=> \$out,'help|h' => \&help); #command line options are --dir, --outfile and --help.
+
+if (($dir eq "") || ($out eq "")){  #if no directory or out file is specified then display help message and exit.
+   print "\t\t****Invalid Usage: Please see usage below.*****\n";
+   help();
+}
+
+my @fastqcFiles= `find $dir -name \"fastqc_data\.txt\"`; #search for fastqc files in user specified directory.
+
+chomp(@fastqcFiles);
+
+foreach my $fq (@fastqcFiles){ #foreach identified fastqc file do....
+    open(F,"$fq") || die "cannot open $fq";
+    my $key;
+    my @data;
+    while (<F>) {
+        chomp;
+        if (/Filename/) {
+            my @line= split/\s+/;
+            $line[1]=~ s/\.trimmed\.fastq//;
+            $key=$line[1];
+            #print $key,"\n";
+            next;
+        }
+        
+        if (/^Total\sSequences|^Sequence\slength|^\%GC/) {
+            my @line1= split/\t+/;
+            push @data, ($line1[0],$line1[1]);
+        }
+        
+        
+        if (/>>/) {
+            unless(/END_MODULE/){
+                s/>>//;
+                my @line2= split/\t+/;
+                push @data, ($line2[0],$line2[1]);
+            }
+        }
+   
+    }
+    @{$fqc{$key}}=@data;
+    close(F);
+} #end for each fastqc file do.
+
+my @sample_ids= sort keys %fqc; # extract the sample ids.
+#create a header for the Excel sheet
+my @header= @{$fqc{$sample_ids[0]}}[0,2,4,6,8,10,12,14,16,18,20,22,24,26];
+unshift(@header, "Sample_Id");
+push @header, "QC_ccrifx_rule";
+
+#Create a XLSX workbook and, within it, a worksheet called FastQC_Report.
+my $wkb= Excel::Writer::XLSX->new( "$out");
+my $fqc_report= $wkb->add_worksheet( "FastQC_Report" );
+
+#add formats.
+my $pass_format= $wkb->add_format();
+my $warn_format= $wkb->add_format();
+my $fail_format= $wkb->add_format();
+my $regular_format=$wkb->add_format();
+my $rotate_format= $wkb->add_format();
+
+#add center justification
+$pass_format->set_align('center');
+$warn_format->set_align('center');
+$fail_format->set_align('center');
+$regular_format->set_align('center');
+
+#add background colour
+$pass_format->set_bg_color('green');
+$warn_format->set_bg_color('yellow');
+$fail_format->set_bg_color('red');
+
+#add font
+$pass_format->set_font('Arial');
+$warn_format->set_font('Arial');
+$fail_format->set_font('Arial');
+$regular_format->set_font('Arial');
+
+#add font size
+$pass_format->set_size(12);
+$warn_format->set_size(12);
+$fail_format->set_size(12);
+$regular_format->set_size(12);
+
+#add rotation properties to the header format
+$rotate_format->set_rotation(90);
+$rotate_format->set_bold();
+$rotate_format->set_align('center');
+$rotate_format->set_font('Arial');
+$rotate_format->set_size(12);
+
+
+for(my $i=0; $i<=$#header; $i++){
+    $fqc_report->write(0,$i,$header[$i], $rotate_format);
+}
+
+
+my $issue=0;
+my $row=1;
+foreach my $k (sort keys %fqc){
+    my @data= @{$fqc{$k}}[1,3,5,7,9,11,13,15,17,19,21,23,25,27];
+    unshift(@data, $k);
+    for (my $col=0; $col<=$#data;$col++){
+        #print $data[$col],"\n";
+       if($data[$col]=~ /pass/i){ 
+        $fqc_report->write($row,$col,$data[$col], $pass_format);
+        }elsif($data[$col]=~ /warn/i){ 
+        $fqc_report->write($row,$col,$data[$col], $warn_format);
+        }elsif($data[$col]=~ /fail/i){ 
+        $fqc_report->write($row,$col,$data[$col], $fail_format);
+        }else{
+        $fqc_report->write($row,$col,$data[$col]);
+        }
+}
+        if (($data[1]!~ /pass/i) or ($data[5]!~ /pass/i) or ($data[6]!~ /pass/i) or ($data[10]!~ /pass/i) or ($data[13]!~ /pass/i)) {
+           $fqc_report->write($row,$#data+1,"ToCheck",$fail_format); $issue=1;
+        }else{
+           $fqc_report->write($row,$#data+1,"Ok");
+        }
+        $row++;
+}
+print $issue;
+if ($issue == 1) {
+      exit 1;
+    } else {
+      exit 0; 
+    }
+
+sub help{
+    print("Usage: summarizeFastQCver2 --dir <path to parent of all FastQC folders> --outfile <name_of_output_file>\n\n");
+    exit;
+}
