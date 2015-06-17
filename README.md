@@ -19,15 +19,15 @@
 # Step 2: data, config and scripts 
 
 3/ cp *.sh path2workingdirectory
-   cp *.json path2workingdirectory
+4/ cp *.json path2workingdirectory
   
   ## edit the config file & rename it config.json
 
 
-# Step3: run pipeline from your working directory
+# Step 3: run pipeline from your working directory
 
 ## test and check your configuration (fake run)
-4/ bash dryrun.sh
+5/ bash dryrun.sh
 
 ## main call (real run)
-5/ qsub -V -l nodes=1:gpfs submit.sh
+6/ qsub -V -l nodes=1:gpfs submit.sh
