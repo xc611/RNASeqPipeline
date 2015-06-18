@@ -1,3 +1,6 @@
+## workflow
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://www.lucidchart.com/documents/embeddedchart/6a805a1f-7d82-43cf-b0a4-4e71faed9ce1" id="HdlORD7K~6a7"></iframe></div>
+
 ##  Instructions
 # Step 0: get the pipeline
    git clone https://github.com/CCBR/RNASeqPipeline
