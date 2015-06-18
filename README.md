@@ -1,5 +1,6 @@
 ## workflow
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://www.lucidchart.com/documents/embeddedchart/6a805a1f-7d82-43cf-b0a4-4e71faed9ce1" id="HdlORD7K~6a7"></iframe></div>
+
+https://www.lucidchart.com/documents/view/6a805a1f-7d82-43cf-b0a4-4e71faed9ce1
 
 ##  Instructions
 # Step 0: get the pipeline
