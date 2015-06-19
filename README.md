@@ -1,8 +1,8 @@
-## workflow
+# Workflow
 
 https://www.lucidchart.com/documents/view/6a805a1f-7d82-43cf-b0a4-4e71faed9ce1
 
-##  Instructions
+#  Instructions
 # Step 0: get the pipeline
    git clone https://github.com/CCBR/RNASeqPipeline
 
@@ -23,6 +23,7 @@ https://www.lucidchart.com/documents/view/6a805a1f-7d82-43cf-b0a4-4e71faed9ce1
 # Step 2: data, config and scripts 
 
 3/ cp *.sh path2workingdirectory
+
 4/ cp *.json path2workingdirectory
   
   ## edit the config file & rename it config.json
