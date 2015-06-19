@@ -1,18 +1,4 @@
 # Workflow
-```html
-<h2>Example of code</h2>
-<pre>
-    <div class="container">
-        <div class="block two first">
-            <h2>Your title</h2>
-            <div class="wrap">
-               <div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen      frameborder="0" style="width:640px; height:480px" src="https://www.lucidchart.com/documents/embeddedchart/6a805a1f-7d82-43cf-b0a4-4e71faed9ce1" id="rLDO7AwwNQRh"></iframe></div>
-            </div>
-        </div>
-    </div>
-</pre>
-```
-
 https://www.lucidchart.com/documents/view/6a805a1f-7d82-43cf-b0a4-4e71faed9ce1
 
 #  Instructions
