@@ -19,8 +19,8 @@ my %fqc; # a hash of arrays to store the parsed data from each fastqc_data.txt f
 GetOptions('dir:s'=> \$dir, 'outfile:s'=> \$out,'help|h' => \&help); #command line options are --dir, --outfile and --help.
 
 if (($dir eq "") || ($out eq "")){  #if no directory or out file is specified then display help message and exit.
-   print "\t\t****Invalid Usage: Please see usage below.*****\n";
-   help();
+    print "\t\t****Invalid Usage: Please see usage below.*****\n";
+    help();
 }
 
 my @fastqcFiles= `find $dir -name \"fastqc_data\.txt\"`; #search for fastqc files in user specified directory.
