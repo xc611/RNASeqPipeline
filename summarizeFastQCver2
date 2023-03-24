@@ -40,13 +40,13 @@ foreach my $fq (@fastqcFiles){ #foreach identified fastqc file do....
             #print $key,"\n";
             next;
         }
-        
+
         if (/^Total\sSequences|^Sequence\slength|^\%GC/) {
             my @line1= split/\t+/;
             push @data, ($line1[0],$line1[1]);
         }
-        
-        
+
+
         if (/>>/) {
             unless(/END_MODULE/){
                 s/>>//;
@@ -54,7 +54,6 @@ foreach my $fq (@fastqcFiles){ #foreach identified fastqc file do....
                 push @data, ($line2[0],$line2[1]);
             }
         }
-   
     }
     @{$fqc{$key}}=@data;
     close(F);
@@ -120,29 +119,29 @@ foreach my $k (sort keys %fqc){
     unshift(@data, $k);
     for (my $col=0; $col<=$#data;$col++){
         #print $data[$col],"\n";
-       if($data[$col]=~ /pass/i){ 
+        if($data[$col]=~ /pass/i){
         $fqc_report->write($row,$col,$data[$col], $pass_format);
-        }elsif($data[$col]=~ /warn/i){ 
+        }elsif($data[$col]=~ /warn/i){
         $fqc_report->write($row,$col,$data[$col], $warn_format);
-        }elsif($data[$col]=~ /fail/i){ 
+        }elsif($data[$col]=~ /fail/i){
         $fqc_report->write($row,$col,$data[$col], $fail_format);
         }else{
         $fqc_report->write($row,$col,$data[$col]);
         }
 }
         if (($data[1]!~ /pass/i) or ($data[5]!~ /pass/i) or ($data[6]!~ /pass/i) or ($data[10]!~ /pass/i) or ($data[13]!~ /pass/i)) {
-           $fqc_report->write($row,$#data+1,"ToCheck",$fail_format); $issue=1;
+            $fqc_report->write($row,$#data+1,"ToCheck",$fail_format); $issue=1;
         }else{
-           $fqc_report->write($row,$#data+1,"Ok");
+            $fqc_report->write($row,$#data+1,"Ok");
         }
         $row++;
 }
 print $issue;
 if ($issue == 1) {
-      exit 1;
+    exit 1;
     } else {
-      exit 0; 
-    }
+    exit 0;
+}
 
 sub help{
     print("Usage: summarizeFastQCver2 --dir <path to parent of all FastQC folders> --outfile <name_of_output_file>\n\n");
